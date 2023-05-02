@@ -6,7 +6,7 @@ using UnityEngine;
 public class movement : MonoBehaviour
 {
     [SerializeField]
-    float speed, sprintspeed, jumpforce, dashforce, dashtime, dashcool, dashupforce;
+    float speed, sprintspeed, jumpforce, dashspeed;
 
     Rigidbody2D rb;
 
@@ -18,14 +18,13 @@ public class movement : MonoBehaviour
     [Header("KEYCODES")]
     public KeyCode jumpKey, sprintKey, dashKey;
 
-    Vector2 lookdir, dashdir;
+    Vector2 lookdir;
 
-    public bool canDash, isDashing;
+    public bool isDashing, hasDashed;
 
     // Start is called before the first frame update
     void Start()
     {
-        canDash = true;
         rb = GetComponent<Rigidbody2D>();
     }
 
@@ -33,8 +32,13 @@ public class movement : MonoBehaviour
 
     private void Update()
     {
+        Debug.Log(isGrounded());
         //Debug.Log(rb.velocity);
         PlayerInput();
+
+        if (isGrounded() == true)
+            hasDashed = false;
+
     }
 
     public bool isGrounded()
@@ -53,28 +57,43 @@ public class movement : MonoBehaviour
         else if (!isDashing) rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
 
         lookdir = new Vector2(horizontal, vertical);
-        dashdir = new Vector2(horizontal * dashforce, vertical * dashupforce);
 
-        if (Input.GetKeyDown(dashKey) && canDash) StartCoroutine(Dash());
+        if (Input.GetKeyDown(dashKey) && !hasDashed) Dash(lookdir.x, lookdir.y);
 
         if (jumpInput && isGrounded())
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpforce);
         }
-       
+
+        
     }
 
-    IEnumerator Dash()
+    private void Dash(float x, float y)
     {
-        canDash = false;
+        hasDashed = true;
+
+        rb.velocity = Vector2.zero;
+        Vector2 dir = new Vector2(x, y);
+
+        rb.velocity += dir * dashspeed;
+        StartCoroutine(DashWait());
+    }
+    IEnumerator DashWait()
+    {
+        StartCoroutine(GroundDash());
+
+        rb.gravityScale = 0;
         isDashing = true;
-        float gravity = rb.gravityScale;
-        rb.gravityScale = 0f;
-        rb.velocity = dashdir;
-        yield return new WaitForSeconds(dashtime);
-        rb.gravityScale = gravity;
+
+        yield return new WaitForSeconds(.3f);
+
+        rb.gravityScale = 3;
         isDashing = false;
-        yield return new WaitForSeconds(dashcool);
-        canDash = true;
+    }
+    IEnumerator GroundDash()
+    {
+        yield return new WaitForSeconds(.15f);
+        if (isGrounded())
+            hasDashed = false;
     }
 }
