@@ -15,7 +15,7 @@ public class changelevel : MonoBehaviour
             {
                 case "Level1":
                     Debug.Log("changed");
-                    SceneManager.LoadScene("Level2");
+                    SceneManager.LoadScene("Level3");
                     break;
 
                 case "Level2":
