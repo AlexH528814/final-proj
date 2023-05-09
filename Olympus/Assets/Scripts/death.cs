@@ -8,7 +8,7 @@ public class death : MonoBehaviour
 {
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        string curscene = "SampleScene";
+        string curscene = SceneManager.GetActiveScene().name;
 
         if (collision.CompareTag("player"))
         {

@@ -9,6 +9,7 @@ public class movement : MonoBehaviour
     float speed, sprintspeed, jumpforce, dashspeed;
 
     Rigidbody2D rb;
+    TrailRenderer trail;
 
     [Header("GROUND CHECK")]
     public Transform groundCheck;
@@ -18,14 +19,17 @@ public class movement : MonoBehaviour
     [Header("KEYCODES")]
     public KeyCode jumpKey, sprintKey, dashKey;
 
-    Vector2 lookdir;
+    Vector2 lookdir, dashdir;
 
-    public bool isDashing, hasDashed;
+    [Header("Dashing")]
+    private float dashvel = 14f, dashtime = 0.5f;
+    public bool isDashing, candash;
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        trail = GetComponent<TrailRenderer>();
     }
 
     // Update is called once per frame
@@ -36,8 +40,8 @@ public class movement : MonoBehaviour
         //Debug.Log(rb.velocity);
         PlayerInput();
 
-        if (isGrounded() == true)
-            hasDashed = false;
+        if (isGrounded() && !isDashing)
+            candash = true;
 
     }
 
@@ -52,48 +56,41 @@ public class movement : MonoBehaviour
         float vertical   = Input.GetAxisRaw("Vertical"); 
         bool jumpInput   = Input.GetKeyDown(jumpKey);
         bool sprinting   = Input.GetKey(sprintKey);
+        bool dashInput   = Input.GetKeyDown(dashKey);
 
         if (sprinting && !isDashing) rb.velocity = new Vector2(horizontal * sprintspeed, rb.velocity.y);
         else if (!isDashing) rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
 
         lookdir = new Vector2(horizontal, vertical);
 
-        if (Input.GetKeyDown(dashKey) && !hasDashed) Dash(lookdir.x, lookdir.y);
+        if (dashInput && candash)
+        {
+            Debug.Log("yo");
+            isDashing = true;
+            candash = false;
+            trail.emitting = true;
+            dashdir = lookdir;
+            if (dashdir == Vector2.zero) 
+            {
+                dashdir = new Vector2(transform.localScale.x, 0); 
+            }
+            StartCoroutine(StopDash());
+        }
+
+        if (isDashing) { rb.velocity = dashdir.normalized * dashspeed; return; }
 
         if (jumpInput && isGrounded())
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpforce);
         }
-
-        
+              
     }
 
-    private void Dash(float x, float y)
+   
+    IEnumerator StopDash()
     {
-        hasDashed = true;
-
-        rb.velocity = Vector2.zero;
-        Vector2 dir = new Vector2(x, y);
-
-        rb.velocity += dir * dashspeed;
-        StartCoroutine(DashWait());
-    }
-    IEnumerator DashWait()
-    {
-        StartCoroutine(GroundDash());
-
-        rb.gravityScale = 0;
-        isDashing = true;
-
-        yield return new WaitForSeconds(.3f);
-
-        rb.gravityScale = 3;
+        yield return new WaitForSeconds(dashtime);
         isDashing = false;
-    }
-    IEnumerator GroundDash()
-    {
-        yield return new WaitForSeconds(.15f);
-        if (isGrounded())
-            hasDashed = false;
+        trail.emitting = false;
     }
 }
