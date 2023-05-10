@@ -10,6 +10,8 @@ public class movement : MonoBehaviour
 
     Rigidbody2D rb;
     TrailRenderer trail;
+    AudioSource audio;
+    public AudioClip clip1;
 
     [Header("GROUND CHECK")]
     public Transform groundCheck;
@@ -25,24 +27,46 @@ public class movement : MonoBehaviour
     private float dashvel = 14f, dashtime = 0.5f;
     public bool isDashing, candash;
 
+
+    float horizontal, vertical;
+    bool jumpInput, sprinting, dashInput;
+
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         trail = GetComponent<TrailRenderer>();
+        audio = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
 
     private void Update()
     {
-        Debug.Log(isGrounded());
+        horizontal = Input.GetAxisRaw("Horizontal");
+        vertical = Input.GetAxisRaw("Vertical");
+        jumpInput = Input.GetKeyDown(jumpKey);
+        sprinting = Input.GetKey(sprintKey);
+        dashInput = Input.GetKeyDown(dashKey);
+
+        //Debug.Log(isGrounded());
         //Debug.Log(rb.velocity);
         PlayerInput();
 
         if (isGrounded() && !isDashing)
             candash = true;
 
+        PlayAudio();
+
+    }
+
+    void PlayAudio()
+    {
+        if (audio.isPlaying) return;
+
+        if (horizontal == 0 || !isGrounded()) audio.Stop();
+
+        if (horizontal != 0 && isGrounded()) audio.Play();
     }
 
     public bool isGrounded()
@@ -52,11 +76,7 @@ public class movement : MonoBehaviour
 
     public void PlayerInput()
     {
-        float horizontal = Input.GetAxisRaw("Horizontal");
-        float vertical   = Input.GetAxisRaw("Vertical"); 
-        bool jumpInput   = Input.GetKeyDown(jumpKey);
-        bool sprinting   = Input.GetKey(sprintKey);
-        bool dashInput   = Input.GetKeyDown(dashKey);
+        
 
         if (sprinting && !isDashing) rb.velocity = new Vector2(horizontal * sprintspeed, rb.velocity.y);
         else if (!isDashing) rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
@@ -65,7 +85,7 @@ public class movement : MonoBehaviour
 
         if (dashInput && candash)
         {
-            Debug.Log("yo");
+            //Debug.Log("yo");
             isDashing = true;
             candash = false;
             trail.emitting = true;
@@ -83,7 +103,9 @@ public class movement : MonoBehaviour
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpforce);
         }
-              
+
+       
+
     }
 
    
