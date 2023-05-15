@@ -71,8 +71,8 @@ public class movement : MonoBehaviour
 
     public bool isGrounded()
     {
-        return Physics2D.OverlapCircle(new Vector2(groundCheck.position.x, groundCheck.position.y), groundDistance, ground);
-    }
+        return Physics2D.OverlapCircle(new Vector2(groundCheck.position.x, groundCheck.position.y), groundDistance, ground) == true;
+   }
 
     public void PlayerInput()
     {
