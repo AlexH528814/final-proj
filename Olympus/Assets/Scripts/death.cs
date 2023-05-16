@@ -10,7 +10,7 @@ public class death : MonoBehaviour
     {
         string curscene = SceneManager.GetActiveScene().name;
 
-        if (collision.CompareTag("player"))
+        if (collision.CompareTag("player") || collision.CompareTag("Player"))
         {
             SceneManager.LoadScene(curscene);
         }
