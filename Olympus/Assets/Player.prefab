@@ -122,7 +122,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 3
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
@@ -142,7 +142,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 7
   sprintspeed: 14
-  jumpforce: 10
+  jumpforce: 20
   dashspeed: 20
   clip1: {fileID: 8300000, guid: cabfae866cab347928b74b7d0ca6bfa9, type: 3}
   groundCheck: {fileID: 5177346943037194842}
@@ -279,7 +279,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: cabfae866cab347928b74b7d0ca6bfa9, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
-  m_Pitch: -1
+  m_Pitch: 1.54
   Loop: 0
   Mute: 0
   Spatialize: 0

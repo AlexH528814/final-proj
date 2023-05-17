@@ -10,8 +10,9 @@ public class movement : MonoBehaviour
 
     Rigidbody2D rb;
     TrailRenderer trail;
-    AudioSource audio;
-    public AudioClip clip1;
+    public AudioSource walk;
+    public AudioSource jump;
+    public AudioSource dash;
 
     [Header("GROUND CHECK")]
     public Transform groundCheck;
@@ -36,7 +37,6 @@ public class movement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         trail = GetComponent<TrailRenderer>();
-        audio = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -61,12 +61,18 @@ public class movement : MonoBehaviour
     }
 
     void PlayAudio()
-    {
-        if (audio.isPlaying) return;
+    {if (dash.isPlaying || walk.isPlaying || jump.isPlaying) return;
+        if (!jump.isPlaying && !isGrounded()) jump.Play();
+        if (isDashing) jump.Stop();
+        
+        if (isDashing) dash.Play();
+        if (!isDashing) dash.Stop();
 
-        if (horizontal == 0 || !isGrounded()) audio.Stop();
+        if (horizontal == 0 || !isGrounded() || isDashing || jumpInput) walk.Stop();
+        if (horizontal != 0 && isGrounded() && !isDashing && !jump.isPlaying) walk.Play();
 
-        if (horizontal != 0 && isGrounded()) audio.Play();
+
+
     }
 
     public bool isGrounded()
