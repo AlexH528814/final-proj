@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Principal;
 using UnityEditorInternal;
 using UnityEngine;
 
@@ -13,6 +14,9 @@ public class movement : MonoBehaviour
     public AudioSource walk;
     public AudioSource jump;
     public AudioSource dash;
+    public AudioSource bgm;
+    public AudioSource za;
+    public AudioSource toki;
 
     [Header("GROUND CHECK")]
     public Transform groundCheck;
@@ -32,11 +36,14 @@ public class movement : MonoBehaviour
     float horizontal, vertical;
     bool jumpInput, sprinting, dashInput;
 
+    bool timestop;
+
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         trail = GetComponent<TrailRenderer>();
+        bgm.Play();
     }
 
     // Update is called once per frame
@@ -61,18 +68,16 @@ public class movement : MonoBehaviour
     }
 
     void PlayAudio()
-    {if (dash.isPlaying || walk.isPlaying || jump.isPlaying) return;
-        if (!jump.isPlaying && !isGrounded()) jump.Play();
+    {   if (dash.isPlaying || jump.isPlaying) return;
+
+        if (jumpInput && isGrounded()) { walk.Stop(); jump.Play(); }
         if (isDashing) jump.Stop();
-        
-        if (isDashing) dash.Play();
+
+        if (isDashing) { walk.Stop(); dash.Play(); }
         if (!isDashing) dash.Stop();
 
-        if (horizontal == 0 || !isGrounded() || isDashing || jumpInput) walk.Stop();
-        if (horizontal != 0 && isGrounded() && !isDashing && !jump.isPlaying) walk.Play();
-
-
-
+        if (dashInput || jumpInput) walk.Stop();
+        if (horizontal != 0 && isGrounded() && !walk.isPlaying)  walk.Play();
     }
 
     public bool isGrounded()
@@ -82,9 +87,9 @@ public class movement : MonoBehaviour
 
     public void PlayerInput()
     {
-        
+        if (Input.GetKeyDown(KeyCode.F9) && timestop == false) StartCoroutine(zawarudo());
 
-        if (sprinting && !isDashing) rb.velocity = new Vector2(horizontal * sprintspeed, rb.velocity.y);
+            if (sprinting && !isDashing) rb.velocity = new Vector2(horizontal * sprintspeed, rb.velocity.y);
         else if (!isDashing) rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
 
         lookdir = new Vector2(horizontal, vertical);
@@ -110,8 +115,6 @@ public class movement : MonoBehaviour
             rb.velocity = new Vector2(rb.velocity.x, jumpforce);
         }
 
-       
-
     }
 
    
@@ -120,5 +123,21 @@ public class movement : MonoBehaviour
         yield return new WaitForSeconds(dashtime);
         isDashing = false;
         trail.emitting = false;
+    }
+
+    IEnumerator zawarudo()
+    {
+        timestop = true;
+
+        if (!za.isPlaying) 
+            za.Play();
+        yield return new WaitForSeconds(1);
+        time.timestop = true;
+        yield return new WaitForSeconds(5);
+        toki.Play();
+        yield return new WaitForSeconds(2);
+        time.timestop = false;
+
+        timestop = false;
     }
 }
