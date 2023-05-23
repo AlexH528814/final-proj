@@ -67,14 +67,13 @@ public class movement : MonoBehaviour
 
     }
 
-    void PlayAudio()
-    {   if (dash.isPlaying || jump.isPlaying) return;
-
-        if (jumpInput && isGrounded()) { walk.Stop(); jump.Play(); }
+    void PlayAudio() 
+    { 
+        if (jumpInput && isGrounded() && !jump.isPlaying) { walk.Stop(); jump.Play(); }
         if (isDashing) jump.Stop();
 
-        if (isDashing) { walk.Stop(); dash.Play(); }
-        if (!isDashing) dash.Stop();
+        if (isDashing && !dash.isPlaying) { walk.Stop(); dash.Play(); }
+        //if (!isDashing) dash.Stop();
 
         if (dashInput || jumpInput) walk.Stop();
         if (horizontal != 0 && isGrounded() && !walk.isPlaying)  walk.Play();
@@ -83,7 +82,7 @@ public class movement : MonoBehaviour
     public bool isGrounded()
     {
         return Physics2D.OverlapCircle(new Vector2(groundCheck.position.x, groundCheck.position.y), groundDistance, ground) == true;
-   }
+    }
 
     public void PlayerInput()
     {

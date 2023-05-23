@@ -12,12 +12,18 @@ EditorBuildSettings:
     path: Assets/Scenes/Level1.unity
     guid: 3db5d3eac4fef0046a7daf00cf5c491a
   - enabled: 1
-    path: Assets/Scenes/Level2.unity
+    path: Assets/Scenes/torture.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
-    path: Assets/Scenes/Level3.unity
+    path: Assets/Scenes/Level2.unity
     guid: 453a09e1c11a53a41968e14725626dec
   - enabled: 1
     path: Assets/Scenes/deathscene.unity
     guid: 09f5ff08e2a84254ba5253d61ab6d24b
+  - enabled: 1
+    path: Assets/Scenes/torture_end.unity
+    guid: 864d14a15b0fa7643bb71b37a60e7bcb
+  - enabled: 1
+    path: Assets/Scenes/normal_end.unity
+    guid: db499010c353803479d93276ec098b6e
   m_configObjects: {}

@@ -14,7 +14,7 @@ public class death : MonoBehaviour
     {
         string curscene = SceneManager.GetActiveScene().name;
 
-        if (curscene == "Level1")
+        if (curscene == "Level1" || curscene == "Level2")
         {
             if (collision.CompareTag("player") || collision.CompareTag("Player") && life.lives > 0)
             {
@@ -30,15 +30,18 @@ public class death : MonoBehaviour
             }
         }
 
-        if (curscene == "Level2")
+        if (curscene == "torture")
         {
-            if (collision.CompareTag("pain"))
+            if (collision.CompareTag("player"))
             {
-                Instantiate(circle, circlespawn);
+                SceneManager.LoadScene(curscene);
             }
-
-            if (collision.CompareTag("player")) SceneManager.LoadScene(curscene);
         }
         
+        if (collision.CompareTag("pain"))
+        {
+            Destroy(collision.gameObject);
+            Instantiate(circle, circlespawn.position, circlespawn.rotation);
+        }
     }
 }

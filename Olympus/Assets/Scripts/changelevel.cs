@@ -10,5 +10,6 @@ public class changelevel : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         function.inotherscript(collision);
+
     }
 }
