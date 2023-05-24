@@ -52561,6 +52561,7 @@ MonoBehaviour:
   startmenucanvas: {fileID: 2128385984}
   optionscanvas: {fileID: 1938920706}
   obj: {fileID: 0}
+  portal: {fileID: 0}
 --- !u!1 &1667349412
 GameObject:
   m_ObjectHideFlags: 0

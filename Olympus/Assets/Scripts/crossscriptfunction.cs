@@ -16,7 +16,7 @@ public class crossscriptfunction : MonoBehaviour
         if (collision.CompareTag("player"))
         {
             string scene = SceneManager.GetActiveScene().name;
-            if (scene == "Level1")  SceneManager.LoadScene("Level2");
+            if (scene == "Level1") SceneManager.LoadScene("normal_end"); // SceneManager.LoadScene("Level2");
         }
 
         if (SceneManager.GetActiveScene().name == "torture")
@@ -29,7 +29,7 @@ public class crossscriptfunction : MonoBehaviour
                 Destroy(collision.gameObject, 0.1f);
             }
 
-            if (collision.CompareTag("player") && this.name == "portal")
+            if (collision.CompareTag("player") && name == "portal")
             {
                 //Debug.Log("hi");
                 SceneManager.LoadScene("torture_end");
@@ -39,7 +39,9 @@ public class crossscriptfunction : MonoBehaviour
 
     public void StartNormalGame()
     {
+        life.lives = 3;
         SceneManager.LoadScene("Level1");
+        
     }
 
     public void StartTortureGame()
@@ -62,6 +64,11 @@ public class crossscriptfunction : MonoBehaviour
     public void QuitGame()
     {
         Application.Quit();
+    }
+
+    public void MainMenu()
+    {
+        SceneManager.LoadScene("startscene");
     }
 
     IEnumerator CanvasEnable()
