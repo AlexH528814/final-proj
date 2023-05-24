@@ -29,9 +29,9 @@ public class crossscriptfunction : MonoBehaviour
                 Destroy(collision.gameObject, 0.1f);
             }
 
-            if (collision.CompareTag("player"))
+            if (collision.CompareTag("player") && this.name == "portal")
             {
-                Debug.Log("hi");
+                //Debug.Log("hi");
                 SceneManager.LoadScene("torture_end");
             }
         }
@@ -66,11 +66,10 @@ public class crossscriptfunction : MonoBehaviour
 
     IEnumerator CanvasEnable()
     {
-        
         canvas.SetActive(true);
         portal.SetActive(true);
         yield return new WaitForSeconds(3);
         canvas.SetActive(false);
-        Destroy(obj);
+        
     }
 }
